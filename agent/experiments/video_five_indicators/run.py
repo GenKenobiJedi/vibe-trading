@@ -89,8 +89,10 @@ def historical_data(
     start = pd.Timestamp(WARMUP_START, tz="UTC")
     stop = pd.Timestamp(EVAL_END_EXCLUSIVE, tz="UTC")
     combined = combined.loc[(combined.index >= start) & (combined.index < stop)]
+    pandas_frequency = {"1h": "1h", "15m": "15min"}[timeframe]
     expected = pd.date_range(
-        start, stop - pd.Timedelta(timeframe), freq=timeframe, tz="UTC"
+        start, stop - pd.Timedelta(pandas_frequency),
+        freq=pandas_frequency, tz="UTC"
     )
     if not combined.index.equals(expected):
         missing = expected.difference(combined.index)
@@ -141,7 +143,7 @@ def run_one(code: str, frame: pd.DataFrame, directory: Path, timeframe: str):
         "initial_cash": 1000.0, "leverage": 10.0,
         "margin_mode": "cross", "perpetual_strict": False,
         "position_adjustment": "rebalance", "rebalance_tolerance": 0.20,
-        "taker_rate": 0.0005, "maker_rate": 0.0002,
+        "taker_rate": 0.0005, "maker_rate": 0.0005,
         "slippage": 0.0003, "funding_rate": 0.0, "benchmark": None,
     }
     directory.mkdir(parents=True, exist_ok=True)
