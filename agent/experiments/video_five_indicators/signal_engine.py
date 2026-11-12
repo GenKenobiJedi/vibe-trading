@@ -222,14 +222,16 @@ class SignalEngine:
                 if go_long:
                     side, half, used_buy = 1, False, last_buy
                     entry_price = market[i]
-                    stop_price = max(lower[i] * (1.0 - self.stop_buffer),
-                                     entry_price * (1.0 - self.margin_loss_cap / self.leverage))
-                    stop_price = min(stop_price, entry_price * (1.0 - 1e-6))
+                    band_stop = lower[i] * (1.0 - self.stop_buffer)
+                    cap_stop = entry_price * (1.0 - self.margin_loss_cap / self.leverage)
+                    # A band above the entry is not a valid LONG stop.
+                    stop_price = max(band_stop, cap_stop) if 0 < band_stop < entry_price else cap_stop
                 elif go_short:
                     side, half, used_sell = -1, False, last_sell
                     entry_price = market[i]
-                    stop_price = min(upper[i] * (1.0 + self.stop_buffer),
-                                     entry_price * (1.0 + self.margin_loss_cap / self.leverage))
-                    stop_price = max(stop_price, entry_price * (1.0 + 1e-6))
+                    band_stop = upper[i] * (1.0 + self.stop_buffer)
+                    cap_stop = entry_price * (1.0 + self.margin_loss_cap / self.leverage)
+                    # A band below the entry is not a valid SHORT stop.
+                    stop_price = min(band_stop, cap_stop) if band_stop > entry_price else cap_stop
             signals[i] = side * self.stake * (0.5 if half else 1.0)
         return pd.Series(signals, index=frame.index, dtype=float)
