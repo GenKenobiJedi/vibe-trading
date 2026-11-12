@@ -26,7 +26,7 @@ mathematical reconstruction, not a copy of the original indicators' code).
 - Stop beyond RSI band by 0.20% with a hard cap at 10% margin loss at 10x
   (about 1% adverse price movement before costs).
 - 10% equity as margin per signal; 10x cross approximate, 1000 USDT starting
-  capital, 0.05% taker fee / 0.02% maker fee, 0.03% slippage per fill.
+  capital, 0.05% taker fee on both entry and exit (conservative market-order approximation), 0.03% slippage per fill.
 - Historical funding, mark-price liquidation and intrabar stop/TP price
   fills are NOT modeled. The resulting returns are exploratory, not
   executable-performance claims.
@@ -52,3 +52,5 @@ Run offline unit checks with:
     PYTHONPATH=agent pytest agent/tests/test_video_five_indicators.py -q
 
 A dedicated GitHub Actions workflow also executes and uploads the evidence.
+
+15m comparison uses identical dates and strategy parameters but 15-minute bars; all results are stored as per-timeframe Actions artifacts. The tests are exploratory only: indicators are independently reconstructed, and strict perpetual mark/funding/liquidation is not modeled.
