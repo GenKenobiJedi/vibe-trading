@@ -11,6 +11,10 @@ jobs:
   historical-backtest:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        timeframe: [1H, 15m]
     permissions:
       contents: read
     steps:
@@ -24,11 +28,11 @@ jobs:
         run: PYTHONPATH=agent python -m pytest agent/tests/test_video_five_indicators.py -q
       - name: Official Binance Vision historical data and Vibe run
         working-directory: agent
-        run: python -m experiments.video_five_indicators.run --timeframe 1H --output video-five-backtest-results
+        run: python -m experiments.video_five_indicators.run --timeframe "${{ matrix.timeframe }}" --output video-five-backtest-results
       - name: Upload provenance, Vibe runs and stats
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: video-five-indicators-2026-1H
+          name: video-five-indicators-2026-${{ matrix.timeframe }}
           path: agent/video-five-backtest-results/
           if-no-files-found: warn
