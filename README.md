@@ -129,6 +129,16 @@ Open **Run Detail** to compare the crossover with buy-and-hold, inspect the trad
 | Validate | Compare the result with buy-and-hold. Inspect turnover, drawdown and validation warnings alongside return. |
 | Revisit | Open the saved run or ask a follow-up with different parameters. You can also save a dated research conclusion and revise it when new evidence arrives. |
 
+## Fork-specific offline ICT / Freqle experiments
+
+Source checkouts of this fork include an isolated, local-data-only
+[ICT/Freqle research driver](agent/research_ict/README.md) with causal H1/H4/5m
+features, component ablations, costs/funding, preceding-data walk-forward fits
+and a sealed final holdout. This is not a live scanner, a historical Qwen replay
+or native-engine fill equivalence. It does not enable broker or model calls.
+Data, generated reports and run artifacts stay outside Git; see the module's
+input, execution and evidence limits before interpreting any result.
+
 ## 📡 Data Sources & Smart Fallback
 
 The loader supports **28 market-data sources**. With `source: "auto"`, it infers the market from the symbol and tries the configured sources in order.
